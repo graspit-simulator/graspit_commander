@@ -11,13 +11,18 @@ from graspit_interface.srv import (
     GetBody,
     SetBodyPose,
     GetDynamics,
-    SetDynamics
+    SetDynamics,
+    AutoGrasp,
+    AutoOpen,
+    SetRobotDesiredDOF
 )
 
 from graspit_exceptions import (
     InvalidRobotIDException,
     InvalidRobotPoseException,
     RobotCollisionException,
+    InvalidRobotDOFOutOfRangeException,
+    InvalidRobotDOFCountMismatchException,
     InvalidGraspableBodyIDException,
     InvalidGraspableBodyPoseException,
     GraspableBodyCollisionException,
@@ -154,7 +159,47 @@ class GraspitCommander(object):
 
     @staticmethod
     def setDynamics(enabled):
-        rospy.wait_for_service('getRobot')
+        rospy.wait_for_service('setDynamics')
 
-        serviceProxy = rospy.ServiceProxy('getRobot', GetRobot)
+        serviceProxy = rospy.ServiceProxy('setDynamics', SetDynamics)
         serviceProxy(enabled)
+
+    @staticmethod
+    def autoGrasp(id):
+        rospy.wait_for_service('autoGrasp')
+
+        serviceProxy = rospy.ServiceProxy('autoGrasp', AutoGrasp)
+        result = serviceProxy(id)
+
+        if result.result is AutoGrasp._response_class.RESULT_SUCCESS:
+            return True
+        elif result.result is AutoGrasp._response_class.RESULT_INVALID_ID:
+            raise InvalidRobotIDException(id)
+
+    @staticmethod
+    def autoOpen(id):
+        rospy.wait_for_service('autoOpen')
+
+        serviceProxy = rospy.ServiceProxy('autoOpen', AutoOpen)
+        result = serviceProxy(id)
+
+        if result.result is AutoOpen._response_class.RESULT_SUCCESS:
+            return True
+        elif result.result is AutoOpen._response_class.RESULT_INVALID_ID:
+            raise InvalidRobotIDException(id)
+
+    @staticmethod
+    def setRobotDesiredDOF(id, dofs):
+        rospy.wait_for_service('setRobotDesiredDOF')
+
+        serviceProxy = rospy.ServiceProxy('setRobotDesiredDOF', SetRobotDesiredDOF)
+        result = serviceProxy(id, dofs)
+
+        if result.result is SetRobotDesiredDOF._response_class.RESULT_SUCCESS:
+            return True
+        elif result.result is SetRobotDesiredDOF._response_class.RESULT_INVALID_ID:
+            raise InvalidRobotIDException(id)
+        elif result.result is SetRobotDesiredDOF._response_class.RESULT_DOF_OUT_OF_RANGE:
+            raise InvalidRobotDOFOutOfRangeException()
+        elif result.result is SetRobotDesiredDOF._response_class.RESULT_DOF_COUNT_MISMATCH:
+            raise InvalidRobotDOFCountMismatchException()

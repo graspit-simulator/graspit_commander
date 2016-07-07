@@ -33,6 +33,16 @@ class RobotCollisionException(InvalidRobotPoseException, CollisionException):
         Exception.__init__(self, "Invalid pose. Will put robot in collision")
 
 
+class InvalidRobotDOFOutOfRangeException(Exception):
+    def __init__(self):
+        Exception.__init__(self, "DOF values out of acceptable range")
+
+
+class InvalidRobotDOFCountMismatchException(Exception):
+    def __init__(self):
+        Exception.__init__(self, "Number of DOFs does not match selected robot")
+
+
 class InvalidGraspableBodyIDException(InvalidIDException):
     def __init__(self, id=None):
         if id is not None:
