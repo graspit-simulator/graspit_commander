@@ -1,9 +1,5 @@
 import unittest
 
-from graspit_commander.graspit_exceptions import (
-    GraspitTimeoutException
-)
-
 from graspit_commander.graspit_commander import GraspitCommander
 
 

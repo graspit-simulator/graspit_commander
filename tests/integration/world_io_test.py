@@ -1,7 +1,6 @@
 import unittest
 
 from graspit_commander.graspit_exceptions import (
-    GraspitTimeoutException,
     LoadWorldException
 )
 
@@ -14,10 +13,7 @@ class WorldIOTest(unittest.TestCase):
 
     """Make sure GraspIt! has a clean world and we can connect to it"""
     def setUp(self):
-        try:
-            GraspitCommander.clearWorld()
-        except GraspitTimeoutException, e:
-            print "Connection to Graspit! is failing. Make sure you are running GraspIt! before running these tests."
+        GraspitCommander.clearWorld()
 
     def testLoadWorld(self):
         GraspitCommander.loadWorld("plannerMug")
