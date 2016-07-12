@@ -195,47 +195,98 @@ class GraspitCommander(object):
 
     @staticmethod
     def setDynamics(enabled):
-        rospy.wait_for_service('setDynamics')
+        _wait_for_service('setDynamics')
 
         serviceProxy = rospy.ServiceProxy('setDynamics', SetDynamics)
         serviceProxy(enabled)
 
     @staticmethod
     def autoGrasp(id):
-        rospy.wait_for_service('autoGrasp')
+        _wait_for_service('autoGrasp')
 
         serviceProxy = rospy.ServiceProxy('autoGrasp', AutoGrasp)
         result = serviceProxy(id)
 
         if result.result is AutoGrasp._response_class.RESULT_SUCCESS:
-            return True
+            return
         elif result.result is AutoGrasp._response_class.RESULT_INVALID_ID:
             raise InvalidRobotIDException(id)
 
     @staticmethod
     def autoOpen(id):
-        rospy.wait_for_service('autoOpen')
+        _wait_for_service('autoOpen')
 
         serviceProxy = rospy.ServiceProxy('autoOpen', AutoOpen)
         result = serviceProxy(id)
 
         if result.result is AutoOpen._response_class.RESULT_SUCCESS:
-            return True
+            return
         elif result.result is AutoOpen._response_class.RESULT_INVALID_ID:
             raise InvalidRobotIDException(id)
 
     @staticmethod
     def setRobotDesiredDOF(id, dofs):
-        rospy.wait_for_service('setRobotDesiredDOF')
+        _wait_for_service('setRobotDesiredDOF')
 
         serviceProxy = rospy.ServiceProxy('setRobotDesiredDOF', SetRobotDesiredDOF)
         result = serviceProxy(id, dofs)
 
         if result.result is SetRobotDesiredDOF._response_class.RESULT_SUCCESS:
-            return True
+            return
         elif result.result is SetRobotDesiredDOF._response_class.RESULT_INVALID_ID:
             raise InvalidRobotIDException(id)
         elif result.result is SetRobotDesiredDOF._response_class.RESULT_DOF_OUT_OF_RANGE:
             raise InvalidRobotDOFOutOfRangeException()
         elif result.result is SetRobotDesiredDOF._response_class.RESULT_DOF_COUNT_MISMATCH:
             raise InvalidRobotDOFCountMismatchException()
+
+    @staticmethod
+    def clearWorld():
+        _wait_for_service('clearWorld')
+
+        serviceProxy = rospy.ServiceProxy('clearWorld', ClearWorld)
+        result = serviceProxy()
+
+        if result.result is ClearWorld._response_class.RESULT_SUCCESS:
+            return
+        elif result.result is ClearWorld._response_class.RESULT_FAILURE:
+            raise ClearWorldException()
+
+    @staticmethod
+    def loadWorld(worldFile):
+        _wait_for_service('loadWorld')
+
+        serviceProxy = rospy.ServiceProxy('loadWorld', LoadWorld)
+        result = serviceProxy(worldFile)
+
+        if result.result is LoadWorld._response_class.RESULT_SUCCESS:
+            return
+        elif result.result is LoadWorld._response_class.RESULT_FAILURE:
+            raise LoadWorldException()
+
+    @classmethod
+    def planGrasps(cls,
+                   graspable_body_id=0,
+                   planner=Planner(Planner.SIM_ANN),
+                   search_energy=SearchEnergy(SearchEnergy.ENERGY_CONTACT_QUALITY),
+                   search_space=SearchSpace(SearchSpace.SPACE_AXIS_ANGLE),
+                   search_contact=SearchContact(SearchContact.CONTACT_PRESET),
+                   max_steps=70000):
+        try:
+            rospy.init_node(cls.ROS_NODE_NAME, anonymous=True)
+        except ROSException:
+            pass
+
+        client = actionlib.SimpleActionClient('planGrasps', PlanGraspsAction)
+        _wait_for_action_server(client)
+
+        goal = PlanGraspsGoal(graspable_body_id=graspable_body_id,
+                              planner=planner,
+                              search_energy=search_energy,
+                              search_space=search_space,
+                              search_contact=search_contact,
+                              max_steps=max_steps)
+
+        client.send_goal_and_wait(goal)
+
+        return client.get_result()
