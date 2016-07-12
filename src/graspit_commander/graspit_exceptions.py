@@ -1,3 +1,12 @@
+class GraspitTimeoutException(Exception):
+    def __init__(self, service=None):
+        if service is not None:
+            Exception.__init__(self, "Timeout! Could not connect to service '{0}'. Are you sure GraspIt! is running?".format(service))
+        else:
+            Exception.__init__(self, "Timeout! Are you sure GraspIt! is running?")
+        self.service = service
+
+
 class InvalidIDException(Exception):
     def __init__(self):
         Exception.__init__(self, "Invalid ID")
@@ -81,3 +90,13 @@ class InvalidBodyPoseException(InvalidPoseException):
 class BodyCollisionException(InvalidGraspableBodyPoseException, CollisionException):
     def __init__(self):
         Exception.__init__(self, "Invalid pose. Will put body in collision")
+
+
+class ClearWorldException(Exception):
+    def __init__(self):
+        Exception.__init__(self, "Could not clear world")
+
+
+class LoadWorldException(Exception):
+    def __init__(self):
+        Exception.__init__(self, "Could not load world")

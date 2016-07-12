@@ -1,5 +1,20 @@
 import rospy
+import actionlib
+from rospy.exceptions import ROSException
 
+from graspit_interface.msg import (
+    Body,
+    Energy,
+    GraspableBody,
+    Grasp,
+    Planner,
+    Robot,
+    SearchContact,
+    SearchEnergy,
+    SearchSpace,
+    PlanGraspsAction,
+    PlanGraspsGoal
+)
 from graspit_interface.srv import (
     GetRobots,
     GetRobot,
@@ -14,10 +29,13 @@ from graspit_interface.srv import (
     SetDynamics,
     AutoGrasp,
     AutoOpen,
-    SetRobotDesiredDOF
+    SetRobotDesiredDOF,
+    ClearWorld,
+    LoadWorld
 )
 
 from graspit_exceptions import (
+    GraspitTimeoutException,
     InvalidRobotIDException,
     InvalidRobotPoseException,
     RobotCollisionException,
@@ -28,17 +46,35 @@ from graspit_exceptions import (
     GraspableBodyCollisionException,
     InvalidBodyIDException,
     InvalidBodyPoseException,
-    BodyCollisionException
+    BodyCollisionException,
+    ClearWorldException,
+    LoadWorldException
 )
+
+
+def _wait_for_service(serviceName, timeout=1):
+    try:
+        rospy.wait_for_service(serviceName, timeout=timeout)
+    except ROSException, e:
+        raise GraspitTimeoutException(serviceName)
+
+def _wait_for_action_server(client, timeout=1):
+    try:
+        client.wait_for_server(timeout=rospy.Duration(timeout))
+    except ROSException, e:
+        raise GraspitTimeoutException()
+
 
 class GraspitCommander(object): 
     """
     Python interface for interacting with GraspIt
     """
 
+    ROS_NODE_NAME = "GraspItCommanderNode"
+
     @staticmethod
     def getRobots():
-        rospy.wait_for_service('getRobots')
+        _wait_for_service('getRobots')
 
         serviceProxy = rospy.ServiceProxy('getRobots', GetRobots)
         robotList = serviceProxy()
@@ -47,7 +83,7 @@ class GraspitCommander(object):
 
     @staticmethod
     def getRobot(id):
-        rospy.wait_for_service('getRobot')
+        _wait_for_service('getRobot')
         
         serviceProxy = rospy.ServiceProxy('getRobot', GetRobot)
         robot = serviceProxy(id)
@@ -59,13 +95,13 @@ class GraspitCommander(object):
 
     @staticmethod
     def setRobotPose(id, pose):
-        rospy.wait_for_service('setRobotPose')
+        _wait_for_service('setRobotPose')
 
         serviceProxy = rospy.ServiceProxy('setRobotPose', SetRobotPose)
         result = serviceProxy(id, pose)
 
         if result.result is SetRobotPose._response_class.RESULT_SUCCESS:
-            return True
+            return
         elif result.result is SetRobotPose._response_class.RESULT_INVALID_ID:
             raise InvalidRobotIDException(id)
         elif result.result is SetRobotPose._response_class.RESULT_INVALID_POSE:
@@ -75,7 +111,7 @@ class GraspitCommander(object):
 
     @staticmethod
     def getGraspableBodies():
-        rospy.wait_for_service('getGraspableBodies')
+        _wait_for_service('getGraspableBodies')
 
         serviceProxy = rospy.ServiceProxy('getGraspableBodies', GetGraspableBodies)
         graspableBodyList = serviceProxy()
@@ -84,7 +120,7 @@ class GraspitCommander(object):
 
     @staticmethod
     def getGraspableBody(id):
-        rospy.wait_for_service('getGraspableBody')
+        _wait_for_service('getGraspableBody')
 
         serviceProxy = rospy.ServiceProxy('getGraspableBody', GetGraspableBody)
         graspableBody = serviceProxy(id)
@@ -96,13 +132,13 @@ class GraspitCommander(object):
 
     @staticmethod
     def setGraspableBodyPose(id, pose):
-        rospy.wait_for_service('setGraspableBodyPose')
+        _wait_for_service('setGraspableBodyPose')
 
         serviceProxy = rospy.ServiceProxy('setGraspableBodyPose', SetGraspableBodyPose)
         result = serviceProxy(id, pose)
 
         if result.result is SetGraspableBodyPose._response_class.RESULT_SUCCESS:
-            return True
+            return
         elif result.result is SetGraspableBodyPose._response_class.RESULT_INVALID_ID:
             raise InvalidGraspableBodyIDException(id)
         elif result.result is SetGraspableBodyPose._response_class.RESULT_INVALID_POSE:
@@ -112,7 +148,7 @@ class GraspitCommander(object):
 
     @staticmethod
     def getBodies():
-        rospy.wait_for_service('getBodies')
+        _wait_for_service('getBodies')
 
         serviceProxy = rospy.ServiceProxy('getBodies', GetBodies)
         bodyList = serviceProxy()
@@ -121,7 +157,7 @@ class GraspitCommander(object):
 
     @staticmethod
     def getBody(id):
-        rospy.wait_for_service('getBody')
+        _wait_for_service('getBody')
 
         serviceProxy = rospy.ServiceProxy('getBody', GetBody)
         body = serviceProxy(id)
@@ -133,13 +169,13 @@ class GraspitCommander(object):
 
     @staticmethod
     def setBodyPose(id, pose):
-        rospy.wait_for_service('setBodyPose')
+        _wait_for_service('setBodyPose')
 
         serviceProxy = rospy.ServiceProxy('setBodyPose', SetBodyPose)
         result = serviceProxy(id, pose)
 
         if result.result is SetBodyPose._response_class.RESULT_SUCCESS:
-            return True
+            return
         elif result.result is SetBodyPose._response_class.RESULT_INVALID_ID:
             raise InvalidBodyIDException(id)
         elif result.result is SetBodyPose._response_class.RESULT_INVALID_POSE:
@@ -149,7 +185,7 @@ class GraspitCommander(object):
 
     @staticmethod
     def getDynamics():
-        rospy.wait_for_service('getDynamics')
+        _wait_for_service('getDynamics')
 
         serviceProxy = rospy.ServiceProxy('getDynamics', GetDynamics)
         result = serviceProxy()
