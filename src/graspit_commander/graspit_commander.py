@@ -33,7 +33,8 @@ from graspit_interface.srv import (
     ClearWorld,
     LoadWorld,
     ApproachToContact,
-    ComputeQuality
+    ComputeQuality,
+    DynamicAutoGraspComplete
 )
 
 from graspit_exceptions import (
@@ -302,9 +303,8 @@ class GraspitCommander(object):
 
         if result.result is ApproachToContact._response_class.RESULT_SUCCESS:
             return
-        elif result.result is ApproachToContact._response_class.RESULT_NO_HAND:
+        elif result.result is ApproachToContact._response_class.RESULT_INVALID_ID:
             raise InvalidRobotIDException(id)
-
 
     @staticmethod
     def computeQuality(id=0):
@@ -315,7 +315,19 @@ class GraspitCommander(object):
 
         if result.result is ComputeQuality._response_class.RESULT_SUCCESS:
             return result
-        elif result.result is ComputeQuality._response_class.RESULT_NO_HAND:
+        elif result.result is ComputeQuality._response_class.RESULT_INVALID_ID:
             raise InvalidRobotIDException(id)
         elif result.result is ComputeQuality._response_class.RESULT_COLLISION:
             raise InvalidRobotPoseException()
+
+    @staticmethod
+    def dynamicAutoGraspComplete(id=0):
+        _wait_for_service('dynamicAutoGraspComplete')
+
+        serviceProxy = rospy.ServiceProxy('dynamicAutoGraspComplete', DynamicAutoGraspComplete)
+        result = serviceProxy(id)
+
+        if result.result is DynamicAutoGraspComplete._response_class.RESULT_SUCCESS:
+            return result.GraspComplete
+        elif result.result is DynamicAutoGraspComplete._response_class.RESULT_INVALID_ID:
+            raise InvalidRobotIDException(id)
