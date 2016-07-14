@@ -31,7 +31,9 @@ from graspit_interface.srv import (
     AutoOpen,
     SetRobotDesiredDOF,
     ClearWorld,
-    LoadWorld
+    LoadWorld,
+    ApproachToContact,
+    ComputeQuality
 )
 
 from graspit_exceptions import (
@@ -290,3 +292,36 @@ class GraspitCommander(object):
         client.send_goal_and_wait(goal)
 
         return client.get_result()
+
+    @staticmethod
+    def approachToContact(moveDist=200, oneStep=False, id=0):
+        if id is not 0:
+            raise NotImplementedError()
+
+        _wait_for_service('approachToContact')
+
+        serviceProxy = rospy.ServiceProxy('approachToContact', ApproachToContact)
+        result = serviceProxy(moveDist, oneStep)
+
+        if result.result is ApproachToContact._response_class.RESULT_SUCCESS:
+            return
+        elif result.result is ApproachToContact._response_class.RESULT_NO_HAND:
+            raise InvalidRobotIDException(id)
+
+
+    @staticmethod
+    def computeQuality(id=0):
+        if id is not 0:
+            raise NotImplementedError()
+
+        _wait_for_service('computeQuality')
+
+        serviceProxy = rospy.ServiceProxy('computeQuality', ComputeQuality)
+        result = serviceProxy()
+
+        if result.result is ComputeQuality._response_class.RESULT_SUCCESS:
+            return result
+        elif result.result is ComputeQuality._response_class.RESULT_NO_HAND:
+            raise InvalidRobotIDException(id)
+        elif result.result is ComputeQuality._response_class.RESULT_COLLISION:
+            raise InvalidRobotPoseException()
