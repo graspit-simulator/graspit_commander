@@ -82,7 +82,7 @@ class GraspitCommander(object):
         return robotList
 
     @staticmethod
-    def getRobot(id):
+    def getRobot(id=0):
         _wait_for_service('getRobot')
         
         serviceProxy = rospy.ServiceProxy('getRobot', GetRobot)
@@ -94,7 +94,7 @@ class GraspitCommander(object):
             raise InvalidRobotIDException(id)
 
     @staticmethod
-    def setRobotPose(id, pose):
+    def setRobotPose(pose, id=0):
         _wait_for_service('setRobotPose')
 
         serviceProxy = rospy.ServiceProxy('setRobotPose', SetRobotPose)
@@ -201,7 +201,7 @@ class GraspitCommander(object):
         serviceProxy(enabled)
 
     @staticmethod
-    def autoGrasp(id):
+    def autoGrasp(id=0):
         _wait_for_service('autoGrasp')
 
         serviceProxy = rospy.ServiceProxy('autoGrasp', AutoGrasp)
@@ -213,7 +213,7 @@ class GraspitCommander(object):
             raise InvalidRobotIDException(id)
 
     @staticmethod
-    def autoOpen(id):
+    def autoOpen(id=0):
         _wait_for_service('autoOpen')
 
         serviceProxy = rospy.ServiceProxy('autoOpen', AutoOpen)
@@ -225,7 +225,7 @@ class GraspitCommander(object):
             raise InvalidRobotIDException(id)
 
     @staticmethod
-    def setRobotDesiredDOF(id, dofs):
+    def setRobotDesiredDOF(dofs, id=0):
         _wait_for_service('setRobotDesiredDOF')
 
         serviceProxy = rospy.ServiceProxy('setRobotDesiredDOF', SetRobotDesiredDOF)
