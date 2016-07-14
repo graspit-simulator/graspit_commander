@@ -13,5 +13,5 @@ class PlannerTest(unittest.TestCase):
 
     def testSimAnnPlannerOnPlannerMugWorld(self):
         GraspitCommander.loadWorld("plannerMug")
-        r = GraspitCommander.planGrasps(max_steps=70000)
+        r = GraspitCommander.planGrasps(max_steps=60000)
         self.assertGreater(len(r.grasps), 0)
