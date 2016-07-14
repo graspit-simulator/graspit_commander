@@ -295,13 +295,10 @@ class GraspitCommander(object):
 
     @staticmethod
     def approachToContact(moveDist=200, oneStep=False, id=0):
-        if id is not 0:
-            raise NotImplementedError()
-
         _wait_for_service('approachToContact')
 
         serviceProxy = rospy.ServiceProxy('approachToContact', ApproachToContact)
-        result = serviceProxy(moveDist, oneStep)
+        result = serviceProxy(moveDist, oneStep, id)
 
         if result.result is ApproachToContact._response_class.RESULT_SUCCESS:
             return
@@ -311,13 +308,10 @@ class GraspitCommander(object):
 
     @staticmethod
     def computeQuality(id=0):
-        if id is not 0:
-            raise NotImplementedError()
-
         _wait_for_service('computeQuality')
 
         serviceProxy = rospy.ServiceProxy('computeQuality', ComputeQuality)
-        result = serviceProxy()
+        result = serviceProxy(id)
 
         if result.result is ComputeQuality._response_class.RESULT_SUCCESS:
             return result
