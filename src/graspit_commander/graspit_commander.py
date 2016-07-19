@@ -31,23 +31,19 @@ from graspit_interface.srv import (
     AutoOpen,
     SetRobotDesiredDOF,
     ClearWorld,
-<<<<<<< Updated upstream
-    LoadWorld
-=======
     LoadWorld,
     ApproachToContact,
     ComputeQuality,
     DynamicAutoGraspComplete,
     ImportObstacle,
     FindInitialContact,
-    # TODO implement these:
     ImportGraspableBody, 
     ImportObstacle,
+    # TODO implement these:
     ImportRobot,
     SaveImage,
     SaveWorld,
     ToggleAllCollisions
->>>>>>> Stashed changes
 )
 
 from graspit_exceptions import (
@@ -314,8 +310,6 @@ class GraspitCommander(object):
         client.send_goal_and_wait(goal)
 
         return client.get_result()
-<<<<<<< Updated upstream
-=======
 
     @staticmethod
     def approachToContact(moveDist=200, oneStep=False, id=0):
@@ -390,4 +384,3 @@ class GraspitCommander(object):
             return
         elif result.result is FindInitialContact._response_class.RESULT_FAILURE:
             raise Exception("Failed to find intial contact with object!")
->>>>>>> Stashed changes
