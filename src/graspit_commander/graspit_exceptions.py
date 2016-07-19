@@ -100,3 +100,4 @@ class ClearWorldException(Exception):
 class LoadWorldException(Exception):
     def __init__(self):
         Exception.__init__(self, "Could not load world")
+

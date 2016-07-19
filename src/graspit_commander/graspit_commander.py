@@ -31,7 +31,23 @@ from graspit_interface.srv import (
     AutoOpen,
     SetRobotDesiredDOF,
     ClearWorld,
+<<<<<<< Updated upstream
     LoadWorld
+=======
+    LoadWorld,
+    ApproachToContact,
+    ComputeQuality,
+    DynamicAutoGraspComplete,
+    ImportObstacle,
+    FindInitialContact,
+    # TODO implement these:
+    ImportGraspableBody, 
+    ImportObstacle,
+    ImportRobot,
+    SaveImage,
+    SaveWorld,
+    ToggleAllCollisions
+>>>>>>> Stashed changes
 )
 
 from graspit_exceptions import (
@@ -49,8 +65,16 @@ from graspit_exceptions import (
     BodyCollisionException,
     ClearWorldException,
     LoadWorldException
+    # TODO implement exceptions for these srv's in graspit_exceptions:
+    #ImportObstacleException,
+    #FindInitialContactException,
+    #ImportGraspsableBodyException,
+    #ImportObstacleException,
+    #ImportRobotException,
+    #SaveImageException,
+    #SaveWorldException,
+    #ToggleAllCollisionsException
 )
-
 
 def _wait_for_service(serviceName, timeout=1):
     try:
@@ -290,3 +314,80 @@ class GraspitCommander(object):
         client.send_goal_and_wait(goal)
 
         return client.get_result()
+<<<<<<< Updated upstream
+=======
+
+    @staticmethod
+    def approachToContact(moveDist=200, oneStep=False, id=0):
+        _wait_for_service('approachToContact')
+
+        serviceProxy = rospy.ServiceProxy('approachToContact', ApproachToContact)
+        result = serviceProxy(moveDist, oneStep, id)
+
+        if result.result is ApproachToContact._response_class.RESULT_SUCCESS:
+            return
+        elif result.result is ApproachToContact._response_class.RESULT_INVALID_ID:
+            raise InvalidRobotIDException(id)
+
+    @staticmethod
+    def computeQuality(id=0):
+        _wait_for_service('computeQuality')
+
+        serviceProxy = rospy.ServiceProxy('computeQuality', ComputeQuality)
+        result = serviceProxy(id)
+
+        if result.result is ComputeQuality._response_class.RESULT_SUCCESS:
+            return result
+        elif result.result is ComputeQuality._response_class.RESULT_INVALID_ID:
+            raise InvalidRobotIDException(id)
+        elif result.result is ComputeQuality._response_class.RESULT_COLLISION:
+            raise InvalidRobotPoseException()
+
+    @staticmethod
+    def dynamicAutoGraspComplete(id=0):
+        _wait_for_service('dynamicAutoGraspComplete')
+
+        serviceProxy = rospy.ServiceProxy('dynamicAutoGraspComplete', DynamicAutoGraspComplete)
+        result = serviceProxy(id)
+
+        if result.result is DynamicAutoGraspComplete._response_class.RESULT_SUCCESS:
+            return result.GraspComplete
+        elif result.result is DynamicAutoGraspComplete._response_class.RESULT_INVALID_ID:
+            raise InvalidRobotIDException(id)
+
+    @staticmethod
+    def importObstacle(obstacleName):
+        _wait_for_service('importObstacle')
+
+        serviceProxy = rospy.ServiceProxy('importObstacle', ImportObstacle)
+        result = serviceProxy(obstacleName)
+
+        if result.result is ImportObstacle._response_class.RESULT_SUCCESS:
+            return
+        elif result.result is ImportObstacle._response_class.RESULT_FAILURE:
+            raise Exception("Invalid obstacle file!")
+
+    @staticmethod
+    def importGraspableBody(bodyName):
+        _wait_for_service('importGraspableBody')
+
+        serviceProxy = rospy.ServiceProxy('importGraspableBody', ImportGraspableBody)
+        result = serviceProxy(bodyName)
+
+        if result.result is ImportGraspableBody._response_class.RESULT_SUCCESS:
+            return
+        elif result.result is ImportGraspableBody._response_class.RESULT_FAILURE:
+            raise Exception("Invalid body file!")
+
+    @staticmethod
+    def findInitialContact(id=0, moveDist=200):
+        _wait_for_service('findInitialContact')
+
+        serviceProxy = rospy.ServiceProxy('findInitialContact', FindInitialContact)
+        result = serviceProxy(id, moveDist)
+
+        if result.result is FindInitialContact._response_class.RESULT_SUCCESS:
+            return
+        elif result.result is FindInitialContact._response_class.RESULT_FAILURE:
+            raise Exception("Failed to find intial contact with object!")
+>>>>>>> Stashed changes

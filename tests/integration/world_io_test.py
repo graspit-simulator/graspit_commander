@@ -21,3 +21,17 @@ class WorldIOTest(unittest.TestCase):
     def testLoadInvalidWorld(self):
         with self.assertRaises(LoadWorldException):
             GraspitCommander.loadWorld("")
+
+    def testImportObstacle(self):
+        GraspitCommander.importObstacle("floor")
+
+    def testImportInvalidObstacle(self):
+        with self.assertRaises(Exception):
+            GraspitCommander.importObstacle("")
+
+    def testImportGraspableBody(self):
+        GraspitCommander.importGraspableBody("ashtray")
+
+    def testImportInvalidGraspableBody(self):
+        with self.assertRaises(Exception):
+            GraspitCommander.importGraspableBody("")
