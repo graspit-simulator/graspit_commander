@@ -34,7 +34,15 @@ from graspit_interface.srv import (
     LoadWorld,
     ApproachToContact,
     ComputeQuality,
-    DynamicAutoGraspComplete
+    DynamicAutoGraspComplete,
+    ImportObstacle,
+    FindInitialContact,
+    ImportGraspableBody, 
+    ImportObstacle,
+    ImportRobot,
+    SaveImage,
+    SaveWorld,
+    ToggleAllCollisions
 )
 
 from graspit_exceptions import (
@@ -51,9 +59,11 @@ from graspit_exceptions import (
     InvalidBodyPoseException,
     BodyCollisionException,
     ClearWorldException,
-    LoadWorldException
+    LoadWorldException,
+    ImportException,
+    SaveImageException,
+    SaveWorldException,
 )
-
 
 def _wait_for_service(serviceName, timeout=1):
     try:
@@ -307,6 +317,18 @@ class GraspitCommander(object):
             raise InvalidRobotIDException(id)
 
     @staticmethod
+    def findInitialContact(id=0, moveDist=200):
+        _wait_for_service('findInitialContact')
+
+        serviceProxy = rospy.ServiceProxy('findInitialContact', FindInitialContact)
+        result = serviceProxy(id, moveDist)
+
+        if result.result is FindInitialContact._response_class.RESULT_SUCCESS:
+            return
+        elif result.result is FindInitialContact._response_class.RESULT_FAILURE:
+            raise InvalidRobotIDException(id)
+
+    @staticmethod
     def computeQuality(id=0):
         _wait_for_service('computeQuality')
 
@@ -331,3 +353,70 @@ class GraspitCommander(object):
             return result.GraspComplete
         elif result.result is DynamicAutoGraspComplete._response_class.RESULT_INVALID_ID:
             raise InvalidRobotIDException(id)
+
+    @staticmethod
+    def importObstacle(obstacleName):
+        _wait_for_service('importObstacle')
+
+        serviceProxy = rospy.ServiceProxy('importObstacle', ImportObstacle)
+        result = serviceProxy(obstacleName)
+
+        if result.result is ImportObstacle._response_class.RESULT_SUCCESS:
+            return
+        elif result.result is ImportObstacle._response_class.RESULT_FAILURE:
+            raise ImportException("obstacle", obstacleName)
+
+    @staticmethod
+    def importGraspableBody(bodyName):
+        _wait_for_service('importGraspableBody')
+
+        serviceProxy = rospy.ServiceProxy('importGraspableBody', ImportGraspableBody)
+        result = serviceProxy(bodyName)
+
+        if result.result is ImportGraspableBody._response_class.RESULT_SUCCESS:
+            return
+        elif result.result is ImportGraspableBody._response_class.RESULT_FAILURE:
+            raise ImportException("graspable body", bodyName)
+
+    @staticmethod
+    def importRobot(robotName):
+        _wait_for_service('importRobot')
+
+        serviceProxy = rospy.ServiceProxy('importRobot', ImportRobot)
+        result = serviceProxy(robotName)
+
+        if result.result is ImportRobot._response_class.RESULT_SUCCESS:
+            return
+        elif result.result is ImportRobot._response_class.RESULT_FAILURE:
+            raise ImportException("robot", robotName)
+
+    @staticmethod
+    def saveImage(fileName):
+        _wait_for_service('saveImage')
+
+        serviceProxy = rospy.ServiceProxy('saveImage', SaveImage)
+        result = serviceProxy(fileName)
+
+        if result.result is SaveImage._response_class.RESULT_SUCCESS:
+            return
+        elif result.result is SaveImage._response_class.RESULT_FAILURE:
+            raise SaveImageException()
+
+    @staticmethod
+    def saveWorld(fileName):
+        _wait_for_service('saveWorld')
+
+        serviceProxy = rospy.ServiceProxy('saveWorld', SaveWorld)
+        result = serviceProxy(fileName)
+
+        if result.result is SaveWorld._response_class.RESULT_SUCCESS:
+            return
+        elif result.result is SaveWorld._response_class.RESULT_FAILURE:
+            raise SaveWorldException()
+
+    @staticmethod
+    def toggleAllCollisions(enableCollisions):
+        _wait_for_service('toggleAllCollisions')
+
+        serviceProxy = rospy.ServiceProxy('toggleAllCollisions', ToggleAllCollisions)
+        serviceProxy(enableCollisions)
