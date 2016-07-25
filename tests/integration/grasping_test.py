@@ -56,5 +56,5 @@ class GraspingTest(unittest.TestCase):
         GraspitCommander.approachToContact()
         robot = GraspitCommander.getRobots().ids[0]
         pose_target = GraspitCommander.getRobot(robot).robot.pose
-        
+
         self.assertTrue(pose_test == pose_target)

@@ -61,9 +61,14 @@ from graspit_exceptions import (
     ClearWorldException,
     LoadWorldException,
     ImportException,
+    ImportRobotException,
+    ImportBodyException,
+    ImportObstacleException,
+    ImportGraspableBodyException,
     SaveImageException,
     SaveWorldException,
 )
+
 
 def _wait_for_service(serviceName, timeout=1):
     try:
@@ -97,7 +102,7 @@ class GraspitCommander(object):
     @staticmethod
     def getRobot(id=0):
         _wait_for_service('getRobot')
-        
+
         serviceProxy = rospy.ServiceProxy('getRobot', GetRobot)
         robot = serviceProxy(id)
 
@@ -364,7 +369,7 @@ class GraspitCommander(object):
         if result.result is ImportObstacle._response_class.RESULT_SUCCESS:
             return
         elif result.result is ImportObstacle._response_class.RESULT_FAILURE:
-            raise ImportException("obstacle", obstacleName)
+            raise ImportObstacleException(name=obstacleName)
 
     @staticmethod
     def importGraspableBody(bodyName):
@@ -376,7 +381,7 @@ class GraspitCommander(object):
         if result.result is ImportGraspableBody._response_class.RESULT_SUCCESS:
             return
         elif result.result is ImportGraspableBody._response_class.RESULT_FAILURE:
-            raise ImportException("graspable body", bodyName)
+            raise ImportGraspableBodyException(name=bodyName)
 
     @staticmethod
     def importRobot(robotName):
@@ -388,7 +393,7 @@ class GraspitCommander(object):
         if result.result is ImportRobot._response_class.RESULT_SUCCESS:
             return
         elif result.result is ImportRobot._response_class.RESULT_FAILURE:
-            raise ImportException("robot", robotName)
+            raise ImportRobotException(name=robotName)
 
     @staticmethod
     def saveImage(fileName):

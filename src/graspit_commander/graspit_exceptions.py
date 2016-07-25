@@ -21,11 +21,29 @@ class CollisionException(Exception):
     def __init__(self):
         Exception.__init__(self, "Collision")
 
-class ImportException(Exception):
-    def __init__(self, import_type, import_target):
-        Exception.__init__(self, 
-                "Import failed for %s %s." % (import_type, import_target))
 
+class ImportException(Exception):
+    def __init__(self, details=""):
+        if details != "": details = ": "+details
+        Exception.__init__(self, "Import failed%s" % details)
+
+class ImportRobotException(ImportException):
+    def __init__(self, name=""):
+        ImportException.__init__(self, details="for robot %s" % name)
+
+class ImportBodyException(ImportException):
+    def __init__(self, body_type= "body", details=""):
+        ImportException.__init__(self, "for %s %s" % (body_type, details))
+
+class ImportObstacleException(ImportBodyException):
+    def __init__(self, name=""):
+        ImportBodyException.__init__(self, body_type="obstacle",
+                                     details=name)
+
+class ImportGraspableBodyException(ImportBodyException):
+    def __init__(self, name=""):
+        ImportBodyException.__init__(self, body_type="graspable body",
+                                     details=name)
 
 class InvalidRobotIDException(InvalidIDException):
     def __init__(self, id=None):
@@ -95,18 +113,22 @@ class BodyCollisionException(InvalidGraspableBodyPoseException, CollisionExcepti
     def __init__(self):
         Exception.__init__(self, "Invalid pose. Will put body in collision")
 
+
 class ClearWorldException(Exception):
     def __init__(self):
         Exception.__init__(self, "Could not clear world")
+
 
 class LoadWorldException(Exception):
     def __init__(self):
         Exception.__init__(self, "Could not load world")
 
+
 class SaveImageException(Exception):
     def __init__(self):
         Exception.__init__(self, "Could not save image.")
-        
+
+
 class SaveWorldException(Exception):
     def __init__(self):
         Exception.__init__(self, "Could not save world.")
