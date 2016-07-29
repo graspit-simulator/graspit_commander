@@ -22,13 +22,13 @@ install all of the python dependencies and add GraspitCommander to your path.
 
 Using GraspIt! Commander
 ------------------------
-Before running any python scripts that use the GraspitCommander, run `source devel/setup.zsh` from
-the root of your GraspIt! workspace to add the GraspitCommander to your python path. 
+This is a ros package, so add it to your catkin_workspace, and run catkin_make
 
-Then, in any python program you can simply import from GraspitCommander
+Then, in any python ros program you can simply import from GraspitCommander
 i.e.
 ```
 from graspit_commander import GraspitCommander
+GraspitCommander.loadWorld("plannerMug")
 GraspitCommander.planGrasps(max_steps=50000)
 ```
 
