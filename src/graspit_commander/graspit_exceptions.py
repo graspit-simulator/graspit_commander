@@ -132,3 +132,7 @@ class SaveImageException(Exception):
 class SaveWorldException(Exception):
     def __init__(self):
         Exception.__init__(self, "Could not save world.")
+
+class InvalidDynamicsModeException(Exception):
+    def __init__(self):
+        Exception.__init__(self, "Current Dynamics Mode is not compatible with this service. Toggle Dynamics and try again.")

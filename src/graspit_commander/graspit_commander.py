@@ -43,7 +43,8 @@ from graspit_interface.srv import (
     SaveImage,
     SaveWorld,
     ToggleAllCollisions,
-    ForceRobotDOF
+    ForceRobotDOF,
+    MoveDOFToContacts
 )
 
 from graspit_exceptions import (
@@ -68,6 +69,7 @@ from graspit_exceptions import (
     ImportGraspableBodyException,
     SaveImageException,
     SaveWorldException,
+    InvalidDynamicsModeException
 )
 
 
@@ -259,6 +261,24 @@ class GraspitCommander(object):
         elif result.result is ForceRobotDOF._response_class.RESULT_DOF_COUNT_MISMATCH:
             raise InvalidRobotDOFCountMismatchException()
         elif result.result is ForceRobotDOF._response_class.RESULT_DYNAMICS_MODE_ENABLED:
+            raise InvalidDynamicsModeException()
+
+    @staticmethod
+    def moveDOFToContacts(dofs, desired_steps, stop_at_contact, id=0):
+        _wait_for_service('moveDOFToContacts')
+
+        serviceProxy = rospy.ServiceProxy('moveDOFToContacts', MoveDOFToContacts)
+        result = serviceProxy(id, dofs, desired_steps, stop_at_contact)
+
+        if result.result is MoveDOFToContacts._response_class.RESULT_SUCCESS:
+            return
+        elif result.result is MoveDOFToContacts._response_class.RESULT_INVALID_ID:
+            raise InvalidRobotIDException(id)
+        elif result.result is MoveDOFToContacts._response_class.RESULT_DOF_OUT_OF_RANGE:
+            raise InvalidRobotDOFOutOfRangeException()
+        elif result.result is MoveDOFToContacts._response_class.RESULT_DOF_COUNT_MISMATCH:
+            raise InvalidRobotDOFCountMismatchException()
+        elif result.result is MoveDOFToContacts._response_class.RESULT_DYNAMICS_MODE_ENABLED:
             raise InvalidDynamicsModeException()
 
     @staticmethod
