@@ -42,7 +42,8 @@ from graspit_interface.srv import (
     ImportRobot,
     SaveImage,
     SaveWorld,
-    ToggleAllCollisions
+    ToggleAllCollisions,
+    ForceRobotDOF
 )
 
 from graspit_exceptions import (
@@ -243,11 +244,29 @@ class GraspitCommander(object):
             raise InvalidRobotIDException(id)
 
     @staticmethod
-    def setRobotDesiredDOF(dofs, id=0):
+    def forceRobotDof(dofs, id=0):
+        _wait_for_service('forceRobotDof')
+
+        serviceProxy = rospy.ServiceProxy('forceRobotDof', ForceRobotDOF)
+        result = serviceProxy(id, dofs)
+
+        if result.result is ForceRobotDOF._response_class.RESULT_SUCCESS:
+            return
+        elif result.result is ForceRobotDOF._response_class.RESULT_INVALID_ID:
+            raise InvalidRobotIDException(id)
+        elif result.result is ForceRobotDOF._response_class.RESULT_DOF_OUT_OF_RANGE:
+            raise InvalidRobotDOFOutOfRangeException()
+        elif result.result is ForceRobotDOF._response_class.RESULT_DOF_COUNT_MISMATCH:
+            raise InvalidRobotDOFCountMismatchException()
+        elif result.result is ForceRobotDOF._response_class.RESULT_DYNAMICS_MODE_ENABLED:
+            raise InvalidDynamicsModeException()
+
+    @staticmethod
+    def setRobotDesiredDOF(dofs, dof_velocities, id=0):
         _wait_for_service('setRobotDesiredDOF')
 
         serviceProxy = rospy.ServiceProxy('setRobotDesiredDOF', SetRobotDesiredDOF)
-        result = serviceProxy(id, dofs)
+        result = serviceProxy(id, dofs, dof_velocities)
 
         if result.result is SetRobotDesiredDOF._response_class.RESULT_SUCCESS:
             return
