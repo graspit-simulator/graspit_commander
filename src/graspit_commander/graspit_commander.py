@@ -92,21 +92,22 @@ class GraspitCommander(object):
     """
 
     ROS_NODE_NAME = "GraspItCommanderNode"
+    GRASPIT_NODE_NAME = "/graspit/"
 
     @staticmethod
     def getRobots():
-        _wait_for_service('getRobots')
+        _wait_for_service(GraspitCommander.GRASPIT_NODE_NAME + 'getRobots')
 
-        serviceProxy = rospy.ServiceProxy('getRobots', GetRobots)
+        serviceProxy = rospy.ServiceProxy(GraspitCommander.GRASPIT_NODE_NAME + 'getRobots', GetRobots)
         robotList = serviceProxy()
 
         return robotList
 
     @staticmethod
     def getRobot(id=0):
-        _wait_for_service('getRobot')
+        _wait_for_service(GraspitCommander.GRASPIT_NODE_NAME + 'getRobot')
 
-        serviceProxy = rospy.ServiceProxy('getRobot', GetRobot)
+        serviceProxy = rospy.ServiceProxy(GraspitCommander.GRASPIT_NODE_NAME + 'getRobot', GetRobot)
         robot = serviceProxy(id)
 
         if robot.result is GetRobot._response_class.RESULT_SUCCESS:
@@ -116,9 +117,9 @@ class GraspitCommander(object):
 
     @staticmethod
     def setRobotPose(pose, id=0):
-        _wait_for_service('setRobotPose')
+        _wait_for_service(GraspitCommander.GRASPIT_NODE_NAME + 'setRobotPose')
 
-        serviceProxy = rospy.ServiceProxy('setRobotPose', SetRobotPose)
+        serviceProxy = rospy.ServiceProxy(GraspitCommander.GRASPIT_NODE_NAME + 'setRobotPose', SetRobotPose)
         result = serviceProxy(id, pose)
 
         if result.result is SetRobotPose._response_class.RESULT_SUCCESS:
@@ -132,18 +133,18 @@ class GraspitCommander(object):
 
     @staticmethod
     def getGraspableBodies():
-        _wait_for_service('getGraspableBodies')
+        _wait_for_service(GraspitCommander.GRASPIT_NODE_NAME + 'getGraspableBodies')
 
-        serviceProxy = rospy.ServiceProxy('getGraspableBodies', GetGraspableBodies)
+        serviceProxy = rospy.ServiceProxy(GraspitCommander.GRASPIT_NODE_NAME + 'getGraspableBodies', GetGraspableBodies)
         graspableBodyList = serviceProxy()
 
         return graspableBodyList
 
     @staticmethod
     def getGraspableBody(id):
-        _wait_for_service('getGraspableBody')
+        _wait_for_service(GraspitCommander.GRASPIT_NODE_NAME + 'getGraspableBody')
 
-        serviceProxy = rospy.ServiceProxy('getGraspableBody', GetGraspableBody)
+        serviceProxy = rospy.ServiceProxy(GraspitCommander.GRASPIT_NODE_NAME + 'getGraspableBody', GetGraspableBody)
         graspableBody = serviceProxy(id)
 
         if graspableBody.result is GetGraspableBody._response_class.RESULT_SUCCESS:
@@ -153,9 +154,9 @@ class GraspitCommander(object):
 
     @staticmethod
     def setGraspableBodyPose(id, pose):
-        _wait_for_service('setGraspableBodyPose')
+        _wait_for_service(GraspitCommander.GRASPIT_NODE_NAME + 'setGraspableBodyPose')
 
-        serviceProxy = rospy.ServiceProxy('setGraspableBodyPose', SetGraspableBodyPose)
+        serviceProxy = rospy.ServiceProxy(GraspitCommander.GRASPIT_NODE_NAME + 'setGraspableBodyPose', SetGraspableBodyPose)
         result = serviceProxy(id, pose)
 
         if result.result is SetGraspableBodyPose._response_class.RESULT_SUCCESS:
@@ -169,18 +170,18 @@ class GraspitCommander(object):
 
     @staticmethod
     def getBodies():
-        _wait_for_service('getBodies')
+        _wait_for_service(GraspitCommander.GRASPIT_NODE_NAME + 'getBodies')
 
-        serviceProxy = rospy.ServiceProxy('getBodies', GetBodies)
+        serviceProxy = rospy.ServiceProxy(GraspitCommander.GRASPIT_NODE_NAME + 'getBodies', GetBodies)
         bodyList = serviceProxy()
 
         return bodyList
 
     @staticmethod
     def getBody(id):
-        _wait_for_service('getBody')
+        _wait_for_service(GraspitCommander.GRASPIT_NODE_NAME + 'getBody')
 
-        serviceProxy = rospy.ServiceProxy('getBody', GetBody)
+        serviceProxy = rospy.ServiceProxy(GraspitCommander.GRASPIT_NODE_NAME + 'getBody', GetBody)
         body = serviceProxy(id)
 
         if body.result is GetBody._response_class.RESULT_SUCCESS:
@@ -190,9 +191,9 @@ class GraspitCommander(object):
 
     @staticmethod
     def setBodyPose(id, pose):
-        _wait_for_service('setBodyPose')
+        _wait_for_service(GraspitCommander.GRASPIT_NODE_NAME + 'setBodyPose')
 
-        serviceProxy = rospy.ServiceProxy('setBodyPose', SetBodyPose)
+        serviceProxy = rospy.ServiceProxy(GraspitCommander.GRASPIT_NODE_NAME + 'setBodyPose', SetBodyPose)
         result = serviceProxy(id, pose)
 
         if result.result is SetBodyPose._response_class.RESULT_SUCCESS:
@@ -206,9 +207,9 @@ class GraspitCommander(object):
 
     @staticmethod
     def getDynamics():
-        _wait_for_service('getDynamics')
+        _wait_for_service(GraspitCommander.GRASPIT_NODE_NAME + 'getDynamics')
 
-        serviceProxy = rospy.ServiceProxy('getDynamics', GetDynamics)
+        serviceProxy = rospy.ServiceProxy(GraspitCommander.GRASPIT_NODE_NAME + 'getDynamics', GetDynamics)
         result = serviceProxy()
 
         return result.dynamicsEnabled
@@ -216,16 +217,16 @@ class GraspitCommander(object):
 
     @staticmethod
     def setDynamics(enabled):
-        _wait_for_service('setDynamics')
+        _wait_for_service(GraspitCommander.GRASPIT_NODE_NAME + 'setDynamics')
 
-        serviceProxy = rospy.ServiceProxy('setDynamics', SetDynamics)
+        serviceProxy = rospy.ServiceProxy(GraspitCommander.GRASPIT_NODE_NAME + 'setDynamics', SetDynamics)
         serviceProxy(enabled)
 
     @staticmethod
     def autoGrasp(id=0):
-        _wait_for_service('autoGrasp')
+        _wait_for_service(GraspitCommander.GRASPIT_NODE_NAME + 'autoGrasp')
 
-        serviceProxy = rospy.ServiceProxy('autoGrasp', AutoGrasp)
+        serviceProxy = rospy.ServiceProxy(GraspitCommander.GRASPIT_NODE_NAME + 'autoGrasp', AutoGrasp)
         result = serviceProxy(id)
 
         if result.result is AutoGrasp._response_class.RESULT_SUCCESS:
@@ -235,9 +236,9 @@ class GraspitCommander(object):
 
     @staticmethod
     def autoOpen(id=0):
-        _wait_for_service('autoOpen')
+        _wait_for_service(GraspitCommander.GRASPIT_NODE_NAME + 'autoOpen')
 
-        serviceProxy = rospy.ServiceProxy('autoOpen', AutoOpen)
+        serviceProxy = rospy.ServiceProxy(GraspitCommander.GRASPIT_NODE_NAME + 'autoOpen', AutoOpen)
         result = serviceProxy(id)
 
         if result.result is AutoOpen._response_class.RESULT_SUCCESS:
@@ -247,9 +248,9 @@ class GraspitCommander(object):
 
     @staticmethod
     def forceRobotDof(dofs, id=0):
-        _wait_for_service('forceRobotDof')
+        _wait_for_service(GraspitCommander.GRASPIT_NODE_NAME + 'forceRobotDof')
 
-        serviceProxy = rospy.ServiceProxy('forceRobotDof', ForceRobotDOF)
+        serviceProxy = rospy.ServiceProxy(GraspitCommander.GRASPIT_NODE_NAME + 'forceRobotDof', ForceRobotDOF)
         result = serviceProxy(id, dofs)
 
         if result.result is ForceRobotDOF._response_class.RESULT_SUCCESS:
@@ -265,9 +266,9 @@ class GraspitCommander(object):
 
     @staticmethod
     def moveDOFToContacts(dofs, desired_steps, stop_at_contact, id=0):
-        _wait_for_service('moveDOFToContacts')
+        _wait_for_service(GraspitCommander.GRASPIT_NODE_NAME + 'moveDOFToContacts')
 
-        serviceProxy = rospy.ServiceProxy('moveDOFToContacts', MoveDOFToContacts)
+        serviceProxy = rospy.ServiceProxy(GraspitCommander.GRASPIT_NODE_NAME + 'moveDOFToContacts', MoveDOFToContacts)
         result = serviceProxy(id, dofs, desired_steps, stop_at_contact)
 
         if result.result is MoveDOFToContacts._response_class.RESULT_SUCCESS:
@@ -283,9 +284,9 @@ class GraspitCommander(object):
 
     @staticmethod
     def setRobotDesiredDOF(dofs, dof_velocities, id=0):
-        _wait_for_service('setRobotDesiredDOF')
+        _wait_for_service(GraspitCommander.GRASPIT_NODE_NAME + 'setRobotDesiredDOF')
 
-        serviceProxy = rospy.ServiceProxy('setRobotDesiredDOF', SetRobotDesiredDOF)
+        serviceProxy = rospy.ServiceProxy(GraspitCommander.GRASPIT_NODE_NAME + 'setRobotDesiredDOF', SetRobotDesiredDOF)
         result = serviceProxy(id, dofs, dof_velocities)
 
         if result.result is SetRobotDesiredDOF._response_class.RESULT_SUCCESS:
@@ -299,9 +300,9 @@ class GraspitCommander(object):
 
     @staticmethod
     def clearWorld():
-        _wait_for_service('clearWorld')
+        _wait_for_service(GraspitCommander.GRASPIT_NODE_NAME + 'clearWorld')
 
-        serviceProxy = rospy.ServiceProxy('clearWorld', ClearWorld)
+        serviceProxy = rospy.ServiceProxy(GraspitCommander.GRASPIT_NODE_NAME + 'clearWorld', ClearWorld)
         result = serviceProxy()
 
         if result.result is ClearWorld._response_class.RESULT_SUCCESS:
@@ -311,9 +312,9 @@ class GraspitCommander(object):
 
     @staticmethod
     def loadWorld(worldFile):
-        _wait_for_service('loadWorld')
+        _wait_for_service(GraspitCommander.GRASPIT_NODE_NAME + 'loadWorld')
 
-        serviceProxy = rospy.ServiceProxy('loadWorld', LoadWorld)
+        serviceProxy = rospy.ServiceProxy(GraspitCommander.GRASPIT_NODE_NAME + 'loadWorld', LoadWorld)
         result = serviceProxy(worldFile)
 
         if result.result is LoadWorld._response_class.RESULT_SUCCESS:
@@ -334,7 +335,7 @@ class GraspitCommander(object):
         except ROSException:
             pass
 
-        client = actionlib.SimpleActionClient('planGrasps', PlanGraspsAction)
+        client = actionlib.SimpleActionClient(GraspitCommander.GRASPIT_NODE_NAME + 'planGrasps', PlanGraspsAction)
         _wait_for_action_server(client)
 
         goal = PlanGraspsGoal(graspable_body_id=graspable_body_id,
@@ -350,9 +351,9 @@ class GraspitCommander(object):
 
     @staticmethod
     def approachToContact(moveDist=200, oneStep=False, id=0):
-        _wait_for_service('approachToContact')
+        _wait_for_service(GraspitCommander.GRASPIT_NODE_NAME + 'approachToContact')
 
-        serviceProxy = rospy.ServiceProxy('approachToContact', ApproachToContact)
+        serviceProxy = rospy.ServiceProxy(GraspitCommander.GRASPIT_NODE_NAME + 'approachToContact', ApproachToContact)
         result = serviceProxy(moveDist, oneStep, id)
 
         if result.result is ApproachToContact._response_class.RESULT_SUCCESS:
@@ -362,9 +363,9 @@ class GraspitCommander(object):
 
     @staticmethod
     def findInitialContact(id=0, moveDist=200):
-        _wait_for_service('findInitialContact')
+        _wait_for_service(GraspitCommander.GRASPIT_NODE_NAME + 'findInitialContact')
 
-        serviceProxy = rospy.ServiceProxy('findInitialContact', FindInitialContact)
+        serviceProxy = rospy.ServiceProxy(GraspitCommander.GRASPIT_NODE_NAME + 'findInitialContact', FindInitialContact)
         result = serviceProxy(id, moveDist)
 
         if result.result is FindInitialContact._response_class.RESULT_SUCCESS:
@@ -374,9 +375,9 @@ class GraspitCommander(object):
 
     @staticmethod
     def computeQuality(id=0):
-        _wait_for_service('computeQuality')
+        _wait_for_service(GraspitCommander.GRASPIT_NODE_NAME + 'computeQuality')
 
-        serviceProxy = rospy.ServiceProxy('computeQuality', ComputeQuality)
+        serviceProxy = rospy.ServiceProxy(GraspitCommander.GRASPIT_NODE_NAME + 'computeQuality', ComputeQuality)
         result = serviceProxy(id)
 
         if result.result is ComputeQuality._response_class.RESULT_SUCCESS:
@@ -388,9 +389,9 @@ class GraspitCommander(object):
 
     @staticmethod
     def dynamicAutoGraspComplete(id=0):
-        _wait_for_service('dynamicAutoGraspComplete')
+        _wait_for_service(GraspitCommander.GRASPIT_NODE_NAME + 'dynamicAutoGraspComplete')
 
-        serviceProxy = rospy.ServiceProxy('dynamicAutoGraspComplete', DynamicAutoGraspComplete)
+        serviceProxy = rospy.ServiceProxy(GraspitCommander.GRASPIT_NODE_NAME + 'dynamicAutoGraspComplete', DynamicAutoGraspComplete)
         result = serviceProxy(id)
 
         if result.result is DynamicAutoGraspComplete._response_class.RESULT_SUCCESS:
@@ -400,9 +401,9 @@ class GraspitCommander(object):
 
     @staticmethod
     def importObstacle(obstacleName):
-        _wait_for_service('importObstacle')
+        _wait_for_service(GraspitCommander.GRASPIT_NODE_NAME + 'importObstacle')
 
-        serviceProxy = rospy.ServiceProxy('importObstacle', ImportObstacle)
+        serviceProxy = rospy.ServiceProxy(GraspitCommander.GRASPIT_NODE_NAME + 'importObstacle', ImportObstacle)
         result = serviceProxy(obstacleName)
 
         if result.result is ImportObstacle._response_class.RESULT_SUCCESS:
@@ -412,9 +413,9 @@ class GraspitCommander(object):
 
     @staticmethod
     def importGraspableBody(bodyName):
-        _wait_for_service('importGraspableBody')
+        _wait_for_service(GraspitCommander.GRASPIT_NODE_NAME + 'importGraspableBody')
 
-        serviceProxy = rospy.ServiceProxy('importGraspableBody', ImportGraspableBody)
+        serviceProxy = rospy.ServiceProxy(GraspitCommander.GRASPIT_NODE_NAME + 'importGraspableBody', ImportGraspableBody)
         result = serviceProxy(bodyName)
 
         if result.result is ImportGraspableBody._response_class.RESULT_SUCCESS:
@@ -424,9 +425,9 @@ class GraspitCommander(object):
 
     @staticmethod
     def importRobot(robotName):
-        _wait_for_service('importRobot')
+        _wait_for_service(GraspitCommander.GRASPIT_NODE_NAME + 'importRobot')
 
-        serviceProxy = rospy.ServiceProxy('importRobot', ImportRobot)
+        serviceProxy = rospy.ServiceProxy(GraspitCommander.GRASPIT_NODE_NAME + 'importRobot', ImportRobot)
         result = serviceProxy(robotName)
 
         if result.result is ImportRobot._response_class.RESULT_SUCCESS:
@@ -436,9 +437,9 @@ class GraspitCommander(object):
 
     @staticmethod
     def saveImage(fileName):
-        _wait_for_service('saveImage')
+        _wait_for_service(GraspitCommander.GRASPIT_NODE_NAME + 'saveImage')
 
-        serviceProxy = rospy.ServiceProxy('saveImage', SaveImage)
+        serviceProxy = rospy.ServiceProxy(GraspitCommander.GRASPIT_NODE_NAME + 'saveImage', SaveImage)
         result = serviceProxy(fileName)
 
         if result.result is SaveImage._response_class.RESULT_SUCCESS:
@@ -448,9 +449,9 @@ class GraspitCommander(object):
 
     @staticmethod
     def saveWorld(fileName):
-        _wait_for_service('saveWorld')
+        _wait_for_service(GraspitCommander.GRASPIT_NODE_NAME + 'saveWorld')
 
-        serviceProxy = rospy.ServiceProxy('saveWorld', SaveWorld)
+        serviceProxy = rospy.ServiceProxy(GraspitCommander.GRASPIT_NODE_NAME + 'saveWorld', SaveWorld)
         result = serviceProxy(fileName)
 
         if result.result is SaveWorld._response_class.RESULT_SUCCESS:
@@ -460,7 +461,7 @@ class GraspitCommander(object):
 
     @staticmethod
     def toggleAllCollisions(enableCollisions):
-        _wait_for_service('toggleAllCollisions')
+        _wait_for_service(GraspitCommander.GRASPIT_NODE_NAME + 'toggleAllCollisions')
 
-        serviceProxy = rospy.ServiceProxy('toggleAllCollisions', ToggleAllCollisions)
+        serviceProxy = rospy.ServiceProxy(GraspitCommander.GRASPIT_NODE_NAME + 'toggleAllCollisions', ToggleAllCollisions)
         serviceProxy(enableCollisions)
