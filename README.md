@@ -7,9 +7,7 @@ https://github.com/CURG/graspit_interface
 
 Installation:
 ----------------------------
-Follow the instructions in the GraspIt Interface [README](https://github.com/CURG/graspit_interface)
-to create a ros workspace with this package.
-
+Follow the instructions in the graspit_interface package [README](https://github.com/CURG/graspit_interface).
 
 Usage:
 ------------------------
