@@ -13,8 +13,8 @@ to create a ros workspace with this package.
 
 Using GraspIt! Commander
 ------------------------
+source ros workspace:
 ```
-//first source ros workspace
 source devel/setup.bash
 ```
 
