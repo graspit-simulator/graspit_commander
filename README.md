@@ -5,13 +5,13 @@ Python ROS Client for GraspIt!
 This package offers a python client for the services exposed in:
 https://github.com/CURG/graspit_interface
 
-Installing GraspIt! Commander
+Installation:
 ----------------------------
 Follow the instructions in the GraspIt Interface [README](https://github.com/CURG/graspit_interface)
 to create a ros workspace with this package.
 
 
-Using GraspIt! Commander
+Usage:
 ------------------------
 source ros workspace:
 ```
@@ -25,7 +25,7 @@ GraspitCommander.loadWorld("plannerMug")
 GraspitCommander.planGrasps(max_steps=50000)
 ```
 
-Running Tests
+Tests:
 -------------
 In one terminal:
 ```
