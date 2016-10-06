@@ -18,7 +18,7 @@ Using GraspIt! Commander
 source devel/setup.bash
 ```
 
-Then in python or IPython
+Then in python:
 ```
 from graspit_commander import GraspitCommander
 GraspitCommander.loadWorld("plannerMug")
