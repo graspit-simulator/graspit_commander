@@ -27,8 +27,14 @@ GraspitCommander.planGrasps(max_steps=50000)
 
 Running Tests
 -------------
-We use py.test to run all of our integration tests. It should automatically be installed when you
-first run catkin_make in this workspace.
-
-Run `py.test` from the root of this package to run all tests (the -v option gives you verbose output)
-
+In one terminal:
+```
+source devel/setup.bash
+roslaunch graspit_interface graspit_interface.launch
+```
+Then in a second terminal:
+```
+source devel/setup.bash
+roscd graspit_commander
+py.test
+```
