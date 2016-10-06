@@ -7,7 +7,7 @@ https://github.com/CURG/graspit_interface
 
 Installation:
 ----------------------------
-Follow the instructions in the graspit_interface package [README](https://github.com/CURG/graspit_interface).
+Follow the instructions at [https://github.com/CURG/graspit_interface](https://github.com/CURG/graspit_interface).
 
 Usage:
 ------------------------
