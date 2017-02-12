@@ -10,7 +10,6 @@ from graspit_interface.msg import (
     Planner,
     Robot,
     SearchContact,
-    SearchEnergy,
     SearchSpace,
     PlanGraspsAction,
     PlanGraspsGoal
@@ -326,7 +325,7 @@ class GraspitCommander(object):
     def planGrasps(cls,
                    graspable_body_id=0,
                    planner=Planner(Planner.SIM_ANN),
-                   search_energy=SearchEnergy(SearchEnergy.ENERGY_CONTACT_QUALITY),
+                   search_energy="GUIDED_POTENTIAL_QUALITY_ENERGY",
                    search_space=SearchSpace(SearchSpace.SPACE_AXIS_ANGLE),
                    search_contact=SearchContact(SearchContact.CONTACT_PRESET),
                    max_steps=70000):
