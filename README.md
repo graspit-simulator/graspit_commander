@@ -11,7 +11,13 @@ Follow the instructions at [https://github.com/graspit-simulator/graspit_interfa
 
 Usage:
 ------------------------
-source ros workspace:
+Start GraspIt! interface in one terminal.
+```
+source devel/setup.bash
+roslaunch graspit_interface graspit_interface.launch
+```
+
+Then in a second terminal source ros workspace:
 ```
 source devel/setup.bash
 ```
