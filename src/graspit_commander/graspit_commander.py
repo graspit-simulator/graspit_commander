@@ -1,6 +1,7 @@
 import rospy
 import actionlib
 from rospy.exceptions import ROSException
+import geometry_msgs
 
 from graspit_interface.msg import (
     Body,
@@ -10,7 +11,6 @@ from graspit_interface.msg import (
     Planner,
     Robot,
     SearchContact,
-    SearchEnergy,
     SearchSpace,
     PlanGraspsAction,
     PlanGraspsGoal
@@ -326,7 +326,7 @@ class GraspitCommander(object):
     def planGrasps(cls,
                    graspable_body_id=0,
                    planner=Planner(Planner.SIM_ANN),
-                   search_energy=SearchEnergy(SearchEnergy.ENERGY_CONTACT_QUALITY),
+                   search_energy="GUIDED_POTENTIAL_QUALITY_ENERGY",
                    search_space=SearchSpace(SearchSpace.SPACE_AXIS_ANGLE),
                    search_contact=SearchContact(SearchContact.CONTACT_PRESET),
                    max_steps=70000):
@@ -400,11 +400,15 @@ class GraspitCommander(object):
             raise InvalidRobotIDException(id)
 
     @staticmethod
-    def importObstacle(obstacleName):
+    def importObstacle(obstacleName, pose=None):
         _wait_for_service(GraspitCommander.GRASPIT_NODE_NAME + 'importObstacle')
 
+        if not pose:
+            pose = geometry_msgs.msg.Pose()
+            pose.orientation.w = 1
+
         serviceProxy = rospy.ServiceProxy(GraspitCommander.GRASPIT_NODE_NAME + 'importObstacle', ImportObstacle)
-        result = serviceProxy(obstacleName)
+        result = serviceProxy(obstacleName, pose)
 
         if result.result is ImportObstacle._response_class.RESULT_SUCCESS:
             return
@@ -412,11 +416,15 @@ class GraspitCommander(object):
             raise ImportObstacleException(name=obstacleName)
 
     @staticmethod
-    def importGraspableBody(bodyName):
+    def importGraspableBody(bodyName, pose=None):
         _wait_for_service(GraspitCommander.GRASPIT_NODE_NAME + 'importGraspableBody')
 
+        if not pose:
+            pose = geometry_msgs.msg.Pose()
+            pose.orientation.w = 1
+
         serviceProxy = rospy.ServiceProxy(GraspitCommander.GRASPIT_NODE_NAME + 'importGraspableBody', ImportGraspableBody)
-        result = serviceProxy(bodyName)
+        result = serviceProxy(bodyName, pose)
 
         if result.result is ImportGraspableBody._response_class.RESULT_SUCCESS:
             return
@@ -424,11 +432,15 @@ class GraspitCommander(object):
             raise ImportGraspableBodyException(name=bodyName)
 
     @staticmethod
-    def importRobot(robotName):
+    def importRobot(robotName, pose=None):
         _wait_for_service(GraspitCommander.GRASPIT_NODE_NAME + 'importRobot')
 
+        if not pose:
+            pose = geometry_msgs.msg.Pose()
+            pose.orientation.w = 1
+
         serviceProxy = rospy.ServiceProxy(GraspitCommander.GRASPIT_NODE_NAME + 'importRobot', ImportRobot)
-        result = serviceProxy(robotName)
+        result = serviceProxy(robotName, pose)
 
         if result.result is ImportRobot._response_class.RESULT_SUCCESS:
             return
