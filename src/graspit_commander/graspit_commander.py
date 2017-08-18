@@ -405,8 +405,6 @@ class GraspitCommander(object):
         elif result.result is ComputeEnergy._response_class.RESULT_INVALID_ENERGY_TYPE:
             raise InvalidEnergyTypeException(energy_type)
 
-
-
     @staticmethod
     def dynamicAutoGraspComplete(id=0):
         _wait_for_service(GraspitCommander.GRASPIT_NODE_NAME + 'dynamicAutoGraspComplete')
