@@ -136,3 +136,7 @@ class SaveWorldException(Exception):
 class InvalidDynamicsModeException(Exception):
     def __init__(self):
         Exception.__init__(self, "Current Dynamics Mode is not compatible with this service. Toggle Dynamics and try again.")
+
+class InvalidEnergyTypeException(Exception):
+    def __init__(self, enery_type):
+        Exception.__init__(self, "Invalid Energy Type specified (id={0})".format(enery_type))

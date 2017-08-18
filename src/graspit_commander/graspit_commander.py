@@ -34,6 +34,7 @@ from graspit_interface.srv import (
     LoadWorld,
     ApproachToContact,
     ComputeQuality,
+    ComputeEnergy,
     DynamicAutoGraspComplete,
     ImportObstacle,
     FindInitialContact,
@@ -69,7 +70,8 @@ from graspit_exceptions import (
     ImportGraspableBodyException,
     SaveImageException,
     SaveWorldException,
-    InvalidDynamicsModeException
+    InvalidDynamicsModeException,
+    InvalidEnergyTypeException
 )
 
 
@@ -386,6 +388,24 @@ class GraspitCommander(object):
             raise InvalidRobotIDException(id)
         elif result.result is ComputeQuality._response_class.RESULT_COLLISION:
             raise InvalidRobotPoseException()
+
+    @staticmethod
+    def computeEnergy(energy_type, hand_id=0, body_id=0):
+        _wait_for_service(GraspitCommander.GRASPIT_NODE_NAME + 'computeEnergy')
+
+        serviceProxy = rospy.ServiceProxy(GraspitCommander.GRASPIT_NODE_NAME + 'computeEnergy', ComputeEnergy)
+        result = serviceProxy(hand_id, body_id, energy_type)
+
+        if result.result is ComputeEnergy._response_class.RESULT_SUCCESS:
+            return result
+        elif result.result is ComputeEnergy._response_class.RESULT_INVALID_HAND_ID:
+            raise InvalidRobotIDException(hand_id)
+        elif result.result is ComputeEnergy._response_class.RESULT_INVALID_BODY_ID:
+            raise InvalidGraspableBodyIDException(body_id)
+        elif result.result is ComputeEnergy._response_class.RESULT_INVALID_ENERGY_TYPE:
+            raise InvalidEnergyTypeException(energy_type)
+
+
 
     @staticmethod
     def dynamicAutoGraspComplete(id=0):
