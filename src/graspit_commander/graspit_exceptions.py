@@ -27,13 +27,16 @@ class ImportException(Exception):
         if details != "": details = ": "+details
         Exception.__init__(self, "Import failed%s" % details)
 
+
 class ImportRobotException(ImportException):
     def __init__(self, name=""):
         ImportException.__init__(self, details="for robot %s" % name)
 
+
 class ImportBodyException(ImportException):
     def __init__(self, body_type= "body", details=""):
         ImportException.__init__(self, "for %s %s" % (body_type, details))
+
 
 class ImportObstacleException(ImportBodyException):
     def __init__(self, name=""):
@@ -104,6 +107,7 @@ class InvalidBodyIDException(InvalidIDException):
 
         self.id = id
 
+
 class InvalidBodyPoseException(InvalidPoseException):
     def __init__(self):
         Exception.__init__(self, "Invalid body pose specified")
@@ -133,9 +137,11 @@ class SaveWorldException(Exception):
     def __init__(self):
         Exception.__init__(self, "Could not save world.")
 
+
 class InvalidDynamicsModeException(Exception):
     def __init__(self):
         Exception.__init__(self, "Current Dynamics Mode is not compatible with this service. Toggle Dynamics and try again.")
+
 
 class InvalidEnergyTypeException(Exception):
     def __init__(self, enery_type):
