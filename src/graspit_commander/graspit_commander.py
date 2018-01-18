@@ -331,7 +331,9 @@ class GraspitCommander(object):
                    search_energy="GUIDED_POTENTIAL_QUALITY_ENERGY",
                    search_space=SearchSpace(SearchSpace.SPACE_AXIS_ANGLE),
                    search_contact=SearchContact(SearchContact.CONTACT_PRESET),
-                   max_steps=70000):
+                   max_steps=70000,
+                   feedback_cb=None,
+                   feedback_num_steps=-1):
         try:
             rospy.init_node(cls.ROS_NODE_NAME, anonymous=True)
         except ROSException:
@@ -345,9 +347,11 @@ class GraspitCommander(object):
                               search_energy=search_energy,
                               search_space=search_space,
                               search_contact=search_contact,
-                              max_steps=max_steps)
+                              max_steps=max_steps,
+                              feedback_num_steps=feedback_num_steps)
 
-        client.send_goal_and_wait(goal)
+        client.send_goal(goal, feedback_cb=feedback_cb)
+        client.wait_for_result()
 
         return client.get_result()
 
