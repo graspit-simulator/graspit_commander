@@ -12,6 +12,7 @@ from graspit_interface.msg import (
     Robot,
     SearchContact,
     SearchSpace,
+    SimAnnParams,
     PlanGraspsAction,
     PlanGraspsGoal
 )
@@ -333,7 +334,8 @@ class GraspitCommander(object):
                    search_contact=SearchContact(SearchContact.CONTACT_PRESET),
                    max_steps=70000,
                    feedback_cb=None,
-                   feedback_num_steps=-1):
+                   feedback_num_steps=-1,
+                   sim_ann_params=SimAnnParams()):
         try:
             rospy.init_node(cls.ROS_NODE_NAME, anonymous=True)
         except ROSException:
@@ -348,7 +350,8 @@ class GraspitCommander(object):
                               search_space=search_space,
                               search_contact=search_contact,
                               max_steps=max_steps,
-                              feedback_num_steps=feedback_num_steps)
+                              feedback_num_steps=feedback_num_steps,
+                              sim_ann_params=sim_ann_params)
 
         client.send_goal(goal, feedback_cb=feedback_cb)
         client.wait_for_result()
