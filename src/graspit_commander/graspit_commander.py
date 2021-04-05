@@ -49,7 +49,7 @@ from graspit_interface.srv import (
     MoveDOFToContacts
 )
 
-from graspit_exceptions import (
+from .graspit_exceptions import (
     GraspitTimeoutException,
     InvalidRobotIDException,
     InvalidRobotPoseException,
@@ -79,13 +79,13 @@ from graspit_exceptions import (
 def _wait_for_service(serviceName, timeout=1):
     try:
         rospy.wait_for_service(serviceName, timeout=timeout)
-    except ROSException, e:
+    except ROSException as e:
         raise GraspitTimeoutException(serviceName)
 
 def _wait_for_action_server(client, timeout=1):
     try:
         client.wait_for_server(timeout=rospy.Duration(timeout))
-    except ROSException, e:
+    except ROSException as e:
         raise GraspitTimeoutException()
 
 
