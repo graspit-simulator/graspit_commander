@@ -1,2 +1,2 @@
-from graspit_commander import *
-from graspit_exceptions import *
+from .graspit_commander import *
+from .graspit_exceptions import *
